@@ -1,11 +1,14 @@
+from datetime import datetime
+print('Début du script à',datetime.datetime.now())
 print('Importation des modèles')
-
 import pandas as pd
 from random import uniform
 import os
 from selenium.common.exceptions import TimeoutException
 from functools import reduce
 import time
+print('Travail d\'IzmoScouting\nCompte Twitter: @IzmoScouting\nhttps://x.com/IzmoScouting')
+time.sleep(1.5)
 print('La moitié des modèles sont importés\nImportation des scripts')
 from scripts.tools import compet_df_adv
 print('Scripts importés\nScrapers en import')
@@ -29,20 +32,24 @@ list_stats = []
 list_defense = []
 list_passing = []
 max_retries = 3
-retries = 0
 lap = len(df)
 for index,id in df.iterrows():
+    retries = 0
+    start_time = time.time()
     print(f'Il reste encore {lap} tours... va faire autre chose de ta vie!')
     lap -= 1
     while retries < max_retries:
         try:    
             process_data(id, index, list_shooting, list_keepers, list_playingtime, list_passing, list_possession, list_defense, list_misc, list_stats)
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            print(f'Cette boucle a pris {elapsed_time}minutes')
             time.sleep(uniform(7,10))
             break
         except TimeoutException:
             print(f"Timeout atteint pour {id.iloc[-1]} de {index}. Tentative {retries + 1} sur {max_retries}.")
             retries += 1
-            time.sleep(2.5 ** retries)
+            time.sleep(2 ** retries)
 
 print('Concaténation des dataframes')
 df_stat = pd.concat(list_stats,ignore_index=True)
@@ -81,23 +88,23 @@ filepath = os.path.join(directory, filename)
 os.makedirs(directory, exist_ok=True)
 
 # Enregistrer le DataFrame dans un fichier Excel
-df_merged.to_excel(filepath,ignore_index=True)
+df_merged.to_excel(filepath,index=False)
 
 print('Joueurs Archivés\nArchivage des gardiens en cours')
 directory = 'files/players'
-filename = 'gardien_adv_saison_24_25.xlsx'
+filename = 'FBREF_gardien_adv_saison_24_25.xlsx'
 filepath = os.path.join(directory, filename)
 # Créer le dossier s'il n'existe pas
 os.makedirs(directory, exist_ok=True)
 # Enregistrer le DataFrame dans un fichier Excel
-df_full_keeper.to_excel(filepath,ignore_index=True)
+df_full_keeper.to_excel(filepath,index=False)
 directory = 'files/players'
-filename = 'gardien_saison_24_25.xlsx'
+filename = 'FBREF_gardien_saison_24_25.xlsx'
 filepath = os.path.join(directory, filename)
 # Créer le dossier s'il n'existe pas
 os.makedirs(directory, exist_ok=True)
 # Enregistrer le DataFrame dans un fichier Excel
-df_full_keeper.to_excel(filepath,ignore_index=True)
-print('Gardien Archivés\nScript terminé!')
+df_full_keeper.to_excel(filepath,index=False)
+print(f'Gardien Archivés\nScript terminé à {datetime.now()}')
 time.sleep(1)
 print('Travail d\'IzmoScouting\nCompte Twitter: @IzmoScouting\nhttps://x.com/IzmoScouting')
