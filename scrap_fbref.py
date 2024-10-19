@@ -69,10 +69,10 @@ print('Merging des DF')
 list_df = [df_stat,df_pass,df_shoot,df_def,df_misc,df_time,df_poss]
 list_df_keepers_full = [df_stat,df_keepers.drop(columns=['Naissance','Joueur','Nation','Pos','Équipe','Clt','Âge','90'])]
 df_merged = reduce(lambda  left,right: pd.merge(left,right,on=['Primary_key','Saison'],
-                                            how='inner'), list_df)
+                                            how='left'), list_df)
 print('Merged des joueurs de champ',df_merged)
 df_full_keeper = reduce(lambda  left,right: pd.merge(left,right,on=['Primary_key','Saison'],
-                                            how='inner'), list_df_keepers_full)
+                                            how='left'), list_df_keepers_full)
 print('Gardien merged')
 
 
