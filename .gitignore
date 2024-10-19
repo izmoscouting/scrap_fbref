@@ -1,0 +1,14 @@
+fbref_env/
+
+null.py
+
+test.py
+
+files/players/general_stats_24_25.xlsx
+
+columns_names.txt
+
+scrap_fbref.ipynb
+
+__pycache__/
+*.py[cod]
