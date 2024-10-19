@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import pandas as pd
-
+from datetime import datetime
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -16,6 +16,7 @@ import time
 adv = pd.read_excel(r'files/players/archives.xlsx').set_index('Competition')
 
 def basics(id):
+    
     if id.iloc[7] == 1:
         print('Saison sur l\'année')
         url = f"https://fbref.com/fr/comps/{id.iloc[6]}/{int(id.iloc[9])}/{id.iloc[-1]}/"
@@ -191,7 +192,7 @@ def scrape_stats_data(dfs,driver,primary_key,journaux_match,profil):
 
 def scrape_shooting_data(dfs,driver,primary_key,journaux_match):
     # Nettoyer les colonnes
-    dfs.drop(columns=['Naissance', 'Joueur', 'Nation', 'Âge', '90','Pos','Équipe','Clt', 'Buts', 'PénM', 'PénT', 'xG', 'npxG'], inplace=True)
+    dfs.drop(columns=['Naissance', 'Joueur', 'Nation', 'Âge', '90','Pos','Clt', 'Buts', 'PénM', 'PénT', 'xG', 'npxG'], inplace=True)
     dfs.rename(columns={'Dist': 'Dist MTir'}, inplace=True)
 
     # Extraire les saisons
@@ -209,7 +210,7 @@ def scrape_shooting_data(dfs,driver,primary_key,journaux_match):
     return dfs
 
 def scrape_passing_data(dfs,driver,primary_key,journaux_match):
-    dfs.drop(columns=['Naissance','Joueur','Nation','Âge','Pos','Équipe','Clt','90','PD','xAG','PrgP'],inplace=True)
+    dfs.drop(columns=['Naissance','Joueur','Nation','Âge','Pos','Clt','90','PD','xAG','PrgP'],inplace=True)
     dfs.rename(columns={'Cmp.1':'Passes TR','Att.1':'Passes TT','Cmp%.1':'%Passes TR','TotDist':'Dist Passes','DistBut':'Dist Passes_v_But',\
                     'Cmp.2':'Passes CR','Att.2':'Passes CT','Cmp%.2':'%Passes CR','Cmp.3':'Passes MR','Att.3':'Passes MT','Cmp%.3':'%Passes MR','Cmp.4':'Passes LR','Att.4':'Passes LT','Cmp%.4':'%Passes LR','PPA':'PsrfRep','1/3':'Passes 1/3'},inplace=True)
 
@@ -229,7 +230,7 @@ def scrape_passing_data(dfs,driver,primary_key,journaux_match):
     return dfs
 
 def scrape_possession_data(dfs,driver,primary_key,journaux_match):
-    dfs.drop(columns=['Naissance','Joueur','Nation','Pos','Équipe','Clt','Âge','90','PrgC'],inplace=True)
+    dfs.drop(columns=['Naissance','Joueur','Nation','Pos','Clt','Âge','90','PrgC','PrgR'],inplace=True)
     dfs.rename(columns={'Action de jeu':'B. Touches w/oCPA','Touches':'B. Touches','SurfRépDéf':'BT SurfRepDef','ZDéf':'BT Zdef','MilTer':'BT MilTer',\
                     'ZOff':'BT ZOff','SurfRépOff':'BT SurfRepOff','Att':'Drb Tente','Succ':'Drb Reussi','Succ%':'%Drb R','TKld':'Faute Subie','Tkld%':'%FSubie','Balle au pied':'Controle','TotDist':'TotDist BaP','DistBut':'DistvBut BaP','1/3':'C1/3','Manqué':'C. Manque','Perte':'Depossede','Rec':'P. Recu'},inplace=True)
 
@@ -266,7 +267,7 @@ def scrape_keepers_data(dfs,driver,primary_key,journaux_match):
     return dfs
 
 def scrape_defense_data(dfs,driver,primary_key,journaux_match):
-    dfs.drop(columns=['Naissance','Joueur','Nation','Âge','Pos','Équipe','Clt','90','Manqués'],inplace=True)
+    dfs.drop(columns=['Naissance','Joueur','Nation','Âge','Pos','Clt','90','Manqués'],inplace=True)
     dfs.rename(columns={'Tcl.1':'Tacles T','ZDéf':'Tcl ZDef','MilTer':'Tcl MilTer','ZOff':'Tcl ZOff','Att':'Tcl o/Drb T',\
                     'Tcl.2':'Tcl o/Drb R','Tcl%':'Tcl o/Drb %R','Tirs':'Tirs Contres','Passe':'Passe Contrees'},inplace=True)
     # Extraire les saisons
@@ -284,7 +285,8 @@ def scrape_defense_data(dfs,driver,primary_key,journaux_match):
     return dfs
 
 def scrape_playingtime_data(dfs,driver,primary_key,journaux_match):
-    dfs.drop(columns=['Naissance','Joueur','Nation','Âge','90','Pos','Équipe','Clt','MJ','Min','Titulaire','onxG','onxGA','+/-','xG+/-'],inplace=True)
+    dfs.drop(columns=['Naissance','Joueur','Nation','Âge','90','Pos','Clt','MJ','Min','Titulaire','onxG','onxGA','+/-','xG+/-'],inplace=True)
+    dfs.rename(columns={'Sur/En dehors du terrain.1':'Sur/En dehors du terrain/90'},inplace=True)
     # Extraire les saisons
     saison = []
     for row in journaux_match:
@@ -301,7 +303,7 @@ def scrape_playingtime_data(dfs,driver,primary_key,journaux_match):
 
 def scrape_misc_data(dfs,driver,primary_key,journaux_match):
     # Nettoyer les colonnes
-    dfs.drop(columns=['Naissance','Joueur','Nation','Âge','Pos','Équipe','Clt','90','CJ','CR','Int','TclR'],inplace=True)
+    dfs.drop(columns=['Naissance','Joueur','Nation','Âge','Pos','Clt','90','CJ','CR','Int','TclR'],inplace=True)
     dfs.rename(columns={'Ftp':'Fte Provoq','Ctr':'CSR T','Gagnés':'DA Gagne','Perdus':'DA Perdu','% gagnés':'%DA Gagne'},inplace=True)
 
     # Extraire les saisons
