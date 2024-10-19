@@ -8,7 +8,7 @@ import os
 from selenium.common.exceptions import TimeoutException
 from functools import reduce
 import time
-print('Travail d\'IzmoScouting\nCompte Twitter: @IzmoScouting\nhttps://x.com/IzmoScouting')
+print('Travail d\'IzmoScouting\nCompte Twitter: @IzmoScouting (https://x.com/IzmoScouting)')
 time.sleep(1.5)
 print('La moitié des modèles sont importés\nImportation des scripts')
 from scripts.tools import compet_df_adv
@@ -43,8 +43,8 @@ for index,id in df.iterrows():
         try:    
             process_data(id, index, list_shooting, list_keepers, list_playingtime, list_passing, list_possession, list_defense, list_misc, list_stats)
             end_time = time.time()
-            elapsed_time = end_time - start_time
-            print(f'Cette boucle a pris {elapsed_time}minutes')
+            elapsed_time = round(end_time - start_time,2)
+            print(f'Cette boucle a pris {elapsed_time} secondes')
             time.sleep(uniform(7,10))
             break
         except TimeoutException:
@@ -108,4 +108,4 @@ os.makedirs(directory, exist_ok=True)
 df_full_keeper.to_excel(filepath,index=False)
 print(f'Gardien Archivés\nScript terminé à {datetime.now()}\nAvait débuté à {debut}')
 time.sleep(3)
-print('Travail d\'IzmoScouting\nCompte Twitter: @IzmoScouting\nhttps://x.com/IzmoScouting')
+print('Travail d\'IzmoScouting\nCompte Twitter: @IzmoScouting (https://x.com/IzmoScouting)')
