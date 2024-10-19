@@ -89,4 +89,3 @@ def compet_df_adv():
     df_merged.loc[ages_non_na.index, 'Naissance'] = birthdates
     
     return df_merged"""
-

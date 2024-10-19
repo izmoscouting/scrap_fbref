@@ -17,6 +17,7 @@ adv = pd.read_excel(r'files/players/archives.xlsx').set_index('Competition')
 
 def basics(id):
     if id.iloc[7] == 1:
+        print('Saison sur l\'année')
         url = f"https://fbref.com/fr/comps/{id.iloc[6]}/{int(id.iloc[9])}/{id.iloc[-1]}/"
 
         options = webdriver.ChromeOptions()
@@ -92,7 +93,7 @@ def basics(id):
             primary_key.append(re.findall(r'(?<=/joueurs/)(.*?)(?=/)',href)[0])
         
     else:
-    
+        print('Saison en décalé')
         url = f"https://fbref.com/fr/comps/{id.iloc[6]}/{int(id.iloc[8])}-{int(id.iloc[9])}/{id.iloc[-1]}/"
 
         options = webdriver.ChromeOptions()
@@ -317,3 +318,28 @@ def scrape_misc_data(dfs,driver,primary_key,journaux_match):
 
     # Ajouter le DataFrame à la liste
     return dfs
+
+def process_data(id, index, list_shooting, list_keepers, list_playingtime, list_passing, list_possession, list_defense, list_misc, list_stats):
+    """
+    Gestion de la récupération des datas.
+    """
+    data_type = id.iloc[-1]
+    print(f'Récupération des données de type {data_type} en cours dans {index}...')
+    basic = basics(id)
+
+    if data_type == 'shooting':
+        list_shooting.append(scrape_shooting_data(basic[0], basic[1], basic[2], basic[3]))
+    elif data_type == 'keepersadv':
+        list_keepers.append(scrape_keepers_data(basic[0], basic[1], basic[2], basic[3]))
+    elif data_type == 'playingtime':
+        list_playingtime.append(scrape_playingtime_data(basic[0], basic[1], basic[2], basic[3]))
+    elif data_type == 'passing':
+        list_passing.append(scrape_passing_data(basic[0], basic[1], basic[2], basic[3]))
+    elif data_type == 'possession':
+        list_possession.append(scrape_possession_data(basic[0], basic[1], basic[2], basic[3]))
+    elif data_type == 'defense':
+        list_defense.append(scrape_defense_data(basic[0], basic[1], basic[2], basic[3]))
+    elif data_type == 'misc':
+        list_misc.append(scrape_misc_data(basic[0], basic[1], basic[2], basic[3]))
+    else:
+        list_stats.append(scrape_stats_data(basic[0], basic[1], basic[2], basic[3], basic[4]))
