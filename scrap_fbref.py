@@ -29,9 +29,9 @@ list_stats = []
 list_defense = []
 list_passing = []
 max_retries = 3
+retries = 0
 lap = len(df)
 for index,id in df.iterrows():
-    retries = 0
     print(f'Il reste encore {lap} tours... va faire autre chose de ta vie!')
     lap -= 1
     while retries < max_retries:
