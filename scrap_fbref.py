@@ -1,5 +1,5 @@
 from datetime import datetime
-print('Début du script à',datetime.datetime.now())
+print('Début du script à',datetime.now())
 print('Importation des modèles')
 import pandas as pd
 from random import uniform
