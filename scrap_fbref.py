@@ -1,5 +1,6 @@
 from datetime import datetime
-print('Début du script à',datetime.now())
+debut = datetime.now()
+print('Début du script à', debut)
 print('Importation des modèles')
 import pandas as pd
 from random import uniform
@@ -31,10 +32,10 @@ list_possession = []
 list_stats = []
 list_defense = []
 list_passing = []
-max_retries = 3
+retries = 0
+max_retries = 5
 lap = len(df)
 for index,id in df.iterrows():
-    retries = 0
     start_time = time.time()
     print(f'Il reste encore {lap} tours... va faire autre chose de ta vie!')
     lap -= 1
@@ -105,6 +106,6 @@ filepath = os.path.join(directory, filename)
 os.makedirs(directory, exist_ok=True)
 # Enregistrer le DataFrame dans un fichier Excel
 df_full_keeper.to_excel(filepath,index=False)
-print(f'Gardien Archivés\nScript terminé à {datetime.now()}')
-time.sleep(1)
+print(f'Gardien Archivés\nScript terminé à {datetime.now()}\nAvait débuté à {debut}')
+time.sleep(3)
 print('Travail d\'IzmoScouting\nCompte Twitter: @IzmoScouting\nhttps://x.com/IzmoScouting')
