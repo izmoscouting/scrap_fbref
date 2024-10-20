@@ -171,7 +171,7 @@ def basics(id):
             
     return dfs,driver,primary_key,journaux_match,profil
 
-def scrape_stats_data(dfs,driver,primary_key,journaux_match,profil):
+def scrape_stats_data(dfs,driver,primary_key,journaux_match,profil,index):
     dfs = dfs.drop(columns=[col for col in dfs.columns if re.search(r'\.1$', col)])
     jm_link = []
     saison = []
@@ -181,7 +181,7 @@ def scrape_stats_data(dfs,driver,primary_key,journaux_match,profil):
         saison.append(re.findall(r'(?<=/matchs/)(.*?)(?=/)',href)[0])
 
     driver.quit()
-
+    dfs.insert(5,'Competition',index)
     dfs['Matchs'] = jm_link
     dfs['Profil'] = profil
     dfs['Primary_key'] = primary_key
@@ -232,7 +232,7 @@ def scrape_passing_data(dfs,driver,primary_key,journaux_match):
 def scrape_possession_data(dfs,driver,primary_key,journaux_match):
     dfs.drop(columns=['Naissance','Joueur','Nation','Pos','Clt','Âge','90','PrgC','PrgR'],inplace=True)
     dfs.rename(columns={'Action de jeu':'B. Touches w/oCPA','Touches':'B. Touches','SurfRépDéf':'BT SurfRepDef','ZDéf':'BT Zdef','MilTer':'BT MilTer',\
-                    'ZOff':'BT ZOff','SurfRépOff':'BT SurfRepOff','Att':'Drb Tente','Succ':'Drb Reussi','Succ%':'%Drb R','TKld':'Faute Subie','Tkld%':'%FSubie','Balle au pied':'Controle','TotDist':'TotDist BaP','DistBut':'DistvBut BaP','1/3':'C1/3','Manqué':'C. Manque','Perte':'Depossede','Rec':'P. Recu'},inplace=True)
+                    'ZOff':'BT ZOff','SurfRépOff':'BT SurfRepOff','Att':'Drb Tente','Succ':'Drb Reussi','Succ%':'%Drb R','TKld':'Taclé p/Drb','Tkld%':'%FSubie p/Drb','Balle au pied':'Controle','TotDist':'TotDist BaP','DistBut':'DistvBut BaP','1/3':'C1/3','Manqué':'C. Manque','Perte':'Depossede','Rec':'P. Recu'},inplace=True)
 
     # Extraire les saisons
     saison = []
@@ -251,7 +251,7 @@ def scrape_possession_data(dfs,driver,primary_key,journaux_match):
 def scrape_keepers_data(dfs,driver,primary_key,journaux_match):
     # Nettoyer les colonnes
     dfs.rename(columns={'Pc':'Peno C','CF':'BE CF','Co':'BE Corn.','Cmp.1':'Deg R','Att.1':'Deg T',\
-                'Cmp%.1':'%Deg R','Tentatives cadrées (GB)':'Passes T','Lanc':'Passes >35m T','% de lancement.1':'%P>35m','LongMoy':'P LongMoy.1','Att.2':'Deg 6m T.','% de lancement.2':'%Deg >35m T','LongMoy.2':'LongMoy Deg','Adv':'Centres Subis','Stp':'Centres Stp','#ESR':'Def HSR','#ESR/90':'Def HSR/90','DistMoy':'Interv DistMoy'},inplace=True)
+                'Cmp%.1':'%Deg R','Tentatives cadrées (GB)':'Passes T','Lanc':'Passes >35m T','% de lancement.1':'%P>35m','LongMoy':'P LongMoy','Att.2':'Deg 6m T.','% de lancement.2':'%Deg >35m T','LongMoy.1':'LongMoy Deg','Adv':'Centres Subis','Stp':'Centres Stp','#ESR':'Def HSR','#ESR/90':'Def HSR/90','DistMoy':'Interv DistMoy'},inplace=True)
 
     # Extraire les saisons
     saison = []
@@ -269,7 +269,7 @@ def scrape_keepers_data(dfs,driver,primary_key,journaux_match):
 def scrape_defense_data(dfs,driver,primary_key,journaux_match):
     dfs.drop(columns=['Naissance','Joueur','Nation','Âge','Pos','Clt','90','Manqués'],inplace=True)
     dfs.rename(columns={'Tcl.1':'Tacles T','ZDéf':'Tcl ZDef','MilTer':'Tcl MilTer','ZOff':'Tcl ZOff','Att':'Tcl o/Drb T',\
-                    'Tcl.2':'Tcl o/Drb R','Tcl%':'Tcl o/Drb %R','Tirs':'Tirs Contres','Passe':'Passe Contrees'},inplace=True)
+                    'Tcl.2':'Tcl s/Drb R','Tcl%':'Tcl s/Drb %R','Tirs':'Tirs Contres','Passe':'Passe Contrees'},inplace=True)
     # Extraire les saisons
     saison = []
     for row in journaux_match:
@@ -304,7 +304,7 @@ def scrape_playingtime_data(dfs,driver,primary_key,journaux_match):
 def scrape_misc_data(dfs,driver,primary_key,journaux_match):
     # Nettoyer les colonnes
     dfs.drop(columns=['Naissance','Joueur','Nation','Âge','Pos','Clt','90','CJ','CR','Int','TclR'],inplace=True)
-    dfs.rename(columns={'Ftp':'Fte Provoq','Ctr':'CSR T','Gagnés':'DA Gagne','Perdus':'DA Perdu','% gagnés':'%DA Gagne'},inplace=True)
+    dfs.rename(columns={'Ftp':'Fte Subie','Ctr':'CSR T','Gagnés':'DA Gagne','Perdus':'DA Perdu','% gagnés':'%DA Gagne'},inplace=True)
 
     # Extraire les saisons
     saison = []
@@ -344,4 +344,4 @@ def process_data(id, index, list_shooting, list_keepers, list_playingtime, list_
     elif data_type == 'misc':
         list_misc.append(scrape_misc_data(basic[0], basic[1], basic[2], basic[3]))
     else:
-        list_stats.append(scrape_stats_data(basic[0], basic[1], basic[2], basic[3], basic[4]))
+        list_stats.append(scrape_stats_data(basic[0], basic[1], basic[2], basic[3], basic[4], index))
